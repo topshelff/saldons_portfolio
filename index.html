@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>saldon's epic website :D</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Dokdo&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/cascadia-code@5.0.0/index.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/cascadia-code@5.0.0/700.css">
+    <style>
+        *, *::before, *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html, body {
+            width: 100%;
+            min-height: 100vh;
+            background: #fbfbfb;
+        }
+
+        .page {
+            position: relative;
+            width: 100%;
+            height: 100vh;
+            background: #fbfbfb;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            overflow: auto;
+        }
+
+        /* Top-left hints stay pinned */
+        .hint-click,
+        .hint-counter {
+            position: absolute;
+            left: 12px;
+            font-family: 'Cascadia Code', 'Cascadia Mono', 'Courier New', monospace;
+            font-size: 10px;
+            color: #000;
+            white-space: nowrap;
+            line-height: normal;
+        }
+        .hint-click  { top: 8px; }
+        .hint-counter { top: 20px; }
+
+        /* Main centered content — margin-top:auto pushes it down, leaving top space for popups */
+        .main-content {
+            margin-top: auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .me-idle {
+            display: block;
+            width: 423px;
+            height: 423px;
+            object-fit: cover;
+            pointer-events: none;
+        }
+
+        .welcome-text {
+            margin-top: 13px;
+            font-family: 'Cascadia Code', 'Cascadia Mono', 'Courier New', monospace;
+            font-size: 20px;
+            color: #000;
+            white-space: nowrap;
+            line-height: normal;
+        }
+
+        .intro-text {
+            margin-top: 6px;
+            font-family: 'Cascadia Code', 'Cascadia Mono', 'Courier New', monospace;
+            font-size: 20px;
+            color: #000;
+            white-space: nowrap;
+            line-height: normal;
+        }
+
+        .text-epic      { color: #80b156; }
+        .text-comp-sci  { color: #e98533; }
+        .text-uog       { color: #e44547; }
+        .text-kaomoji   { color: #f0a0d0; }
+
+        .nav-links {
+            margin-top: 16px;
+            font-family: 'Cascadia Code', 'Cascadia Mono', 'Courier New', monospace;
+            font-size: 19px;
+            font-weight: 700;
+            color: #84b0f2;
+        }
+        .nav-links p {
+            margin: 0;
+            line-height: normal;
+        }
+
+        /* Footer */
+        .footer {
+            margin-top: 58px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .footer-icons {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .icon-github   { width: 25px; height: 25px; fill: #000; }
+        .icon-youtube  { width: 31px; height: 30px; fill: #000; }
+
+        .footer-copyright {
+            margin-top: 25px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            font-family: 'Dokdo', cursive;
+            font-size: 19px;
+            color: #000;
+            white-space: nowrap;
+        }
+
+        .icon-copyright { width: 12px; height: 12px; fill: #000; }
+    </style>
+</head>
+<body>
+    <div class="page">
+
+        <!-- Top-left hints -->
+        <p class="hint-click">click my stickman for a swag kickflip</p>
+        <p class="hint-counter">global saldon trick counter: 67</p>
+
+        <!-- Centered main content -->
+        <div class="main-content">
+
+            <img class="me-idle" src="assets/me(idle).png" alt="saldon idle">
+
+            <p class="welcome-text">welcome to saldon's <span class="text-epic">epic</span> website!!! :D</p>
+
+            <p class="intro-text">i am a <span class="text-comp-sci">comp sci</span> student @ <span class="text-uog">uog</span> and i love coding!</p>
+
+            <div class="nav-links">
+                <p>&gt; my projects</p>
+                <p>&gt; blog (more about me)</p>
+                <p>&gt; my fav song</p>
+                <p>&gt; contact me <span class="text-kaomoji">(^u^)</span></p>
+            </div>
+
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            <div class="footer-icons">
+                <!-- GitHub (Bootstrap Icons) -->
+                <svg class="icon-github" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16">
+                    <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8z"/>
+                </svg>
+                <!-- YouTube (Bootstrap Icons) -->
+                <svg class="icon-youtube" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16">
+                    <path d="M8.051 1.999h.089c.822.003 4.987.033 6.11.335a2.01 2.01 0 0 1 1.415 1.42c.101.38.172.883.22 1.402l.01.104.022.26.008.104c.065.914.073 1.77.074 1.957v.075c-.001.194-.01 1.108-.082 2.06l-.008.105-.009.104c-.05.572-.124 1.14-.235 1.558a2.007 2.007 0 0 1-1.415 1.42c-1.16.312-5.569.334-6.18.335h-.142c-.309 0-1.587-.006-2.927-.052l-.17-.006-.087-.004-.171-.007-.171-.007c-1.11-.049-2.167-.128-2.654-.26a2.007 2.007 0 0 1-1.415-1.419c-.111-.417-.185-.986-.235-1.558L.09 9.82l-.008-.104A31.4 31.4 0 0 1 0 7.68v-.123c.002-.215.01-.958.064-1.778l.007-.103.003-.052.008-.104.022-.26.01-.104c.048-.519.119-1.023.22-1.402a2.007 2.007 0 0 1 1.415-1.42c.487-.13 1.544-.21 2.654-.26l.17-.007.172-.006.086-.003.171-.007A99.788 99.788 0 0 1 7.858 2h.193zM6.4 5.209v4.818l4.157-2.408L6.4 5.209z"/>
+                </svg>
+            </div>
+            <div class="footer-copyright">
+                <!-- Copyright circle (Bootstrap Icons) -->
+                <svg class="icon-copyright" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16">
+                    <path d="M1 8a7 7 0 1 0 14 0A7 7 0 0 0 1 8Zm15 0A8 8 0 1 1 0 8a8 8 0 0 1 16 0Zm-8.146 3.992c-1.212 0-1.927-.92-1.927-2.801V8.054c0-1.862.715-2.8 1.927-2.8.448 0 .84.146 1.146.41.305.26.51.634.64 1.12l-.803.25c-.087-.339-.226-.594-.415-.768a.993.993 0 0 0-.668-.237c-.4 0-.766.158-1.006.479-.24.32-.37.802-.37 1.456v1.03c0 .67.13 1.156.38 1.49.248.333.617.508 1.005.508.265 0 .515-.09.704-.258.19-.168.332-.42.424-.748l.821.262c-.155.556-.39.977-.713 1.245-.322.268-.712.404-1.148.404"/>
+                </svg>
+                2025 saldon Topjor
+            </div>
+        </div>
+
+    </div>
+</body>
+</html>
