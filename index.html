@@ -61,7 +61,7 @@
             width: 423px;
             height: 423px;
             object-fit: cover;
-            pointer-events: none;
+            cursor: pointer;
         }
 
         .welcome-text {
@@ -128,6 +128,20 @@
         }
 
         .icon-copyright { width: 12px; height: 12px; fill: #000; }
+
+        .music-toggle {
+            position: absolute;
+            right: 12px;
+            top: 8px;
+            font-family: 'Cascadia Code', 'Cascadia Mono', 'Courier New', monospace;
+            font-size: 10px;
+            color: #000;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 0;
+            line-height: normal;
+        }
     </style>
 </head>
 <body>
@@ -136,6 +150,12 @@
         <!-- Top-left hints -->
         <p class="hint-click">click my stickman for a swag kickflip</p>
         <p class="hint-counter">global saldon trick counter: 67</p>
+
+        <!-- Music toggle (top-right) -->
+        <button class="music-toggle" id="music-toggle">♫ music [click anywhere to start]</button>
+
+        <!-- Background music -->
+        <audio id="bg-music" loop src="assets/music/comfy vibes - LilyPichu.webm"></audio>
 
         <!-- Centered main content -->
         <div class="main-content">
@@ -177,5 +197,78 @@
         </div>
 
     </div>
+
+    <script>
+        // --- Music ---
+        const audio = document.getElementById('bg-music');
+        const musicBtn = document.getElementById('music-toggle');
+        audio.volume = 0.2;
+        let musicStarted = false;
+        let muted = false;
+
+        function startMusic() {
+            if (musicStarted) return;
+            musicStarted = true;
+            audio.play().catch(() => {});
+            musicBtn.textContent = '♫ music [on]';
+        }
+
+        document.addEventListener('click', startMusic, { once: true });
+
+        musicBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            startMusic();
+            muted = !muted;
+            audio.muted = muted;
+            musicBtn.textContent = muted ? '♫ music [off]' : '♫ music [on]';
+        });
+
+        // --- Kickflip ---
+        const trickSfx = new Audio('assets/sounds/trick.mp3');
+        trickSfx.volume = 0.5;
+
+        const IDLE = 'assets/me(idle).png';
+        const FRAMES = [
+            'assets/kickflip/kickflip1.png',
+            'assets/kickflip/kickflip2.png',
+            'assets/kickflip/kickflip3.png',
+            'assets/kickflip/kickflip4.png',
+            'assets/kickflip/kickflip5.png',
+            'assets/kickflip/kickflip6.png',
+        ];
+        const FRAME_MS = 110;
+
+        // preload all frames so there's no flicker
+        FRAMES.forEach(src => { const img = new Image(); img.src = src; });
+
+        const stickman = document.querySelector('.me-idle');
+        const counterEl = document.querySelector('.hint-counter');
+        let trickCount = 67;
+        let animating = false;
+
+        stickman.addEventListener('click', () => {
+            if (animating) return;
+            animating = true;
+
+            trickSfx.currentTime = 0;
+            trickSfx.play().catch(() => {});
+
+            let frame = 0;
+            stickman.src = FRAMES[frame];
+
+            const tick = setInterval(() => {
+                frame++;
+                if (frame < FRAMES.length) {
+                    stickman.src = FRAMES[frame];
+                } else {
+                    clearInterval(tick);
+                    stickman.src = IDLE;
+                    animating = false;
+                    trickCount++;
+                    counterEl.textContent = `global saldon trick counter: ${trickCount}`;
+                }
+            }, FRAME_MS);
+        });
+    </script>
 </body>
 </html>
