@@ -97,6 +97,12 @@
         .nav-links p {
             margin: 0;
             line-height: normal;
+            cursor: pointer;
+            transition: transform 0.1s ease;
+            transform-origin: left center;
+        }
+        .nav-links p:hover {
+            transform: scale(1.15);
         }
 
         /* Footer */
@@ -113,8 +119,9 @@
             gap: 6px;
         }
 
-        .icon-github   { width: 25px; height: 25px; fill: #000; }
-        .icon-youtube  { width: 31px; height: 30px; fill: #000; }
+        .icon-github   { width: 25px; height: 25px; fill: #000; cursor: pointer; transition: transform 0.1s ease; }
+        .icon-youtube  { width: 31px; height: 30px; fill: #000; cursor: pointer; transition: transform 0.1s ease; }
+        .icon-github:hover, .icon-youtube:hover { transform: scale(1.2); }
 
         .footer-copyright {
             margin-top: 25px;
