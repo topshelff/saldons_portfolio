@@ -94,14 +94,19 @@
             font-weight: 700;
             color: #84b0f2;
         }
-        .nav-links p {
+        .nav-links p, .nav-links a {
             margin: 0;
             line-height: normal;
             cursor: pointer;
             transition: transform 0.1s ease;
             transform-origin: left center;
         }
-        .nav-links p:hover {
+        .nav-links a {
+            text-decoration: none;
+            color: inherit;
+            display: block;
+        }
+        .nav-links p:hover, .nav-links a:hover {
             transform: scale(1.15);
         }
 
@@ -214,6 +219,37 @@
         .project-link { text-decoration: none; color: #84b0f2; }
         .project-link:hover { text-decoration: underline; }
 
+        /* Blog accordion */
+        #popup-blog { min-width: 560px; }
+
+        .blog-entry { border-bottom: 1px solid #000; padding-bottom: 8px; }
+        .blog-entry:last-child { border-bottom: none; }
+
+        .blog-entry-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            padding: 6px 0;
+            font-weight: 700;
+            font-size: 13px;
+            user-select: none;
+        }
+        .blog-entry-header:hover .blog-date { color: #84b0f2; }
+
+        .blog-toggle { font-size: 12px; color: #000; }
+
+        .blog-entry-body {
+            display: none;
+            padding: 8px 0 4px 12px;
+            font-size: 12px;
+            line-height: 1.7;
+            color: #333;
+        }
+        .blog-entry-body p { margin-bottom: 6px; }
+        .blog-entry-body p:last-child { margin-bottom: 0; }
+        .blog-entry.open .blog-entry-body { display: block; }
+
         /* Generic popup content */
         .popup-text {
             font-size: 13px;
@@ -241,7 +277,7 @@
     <div class="page">
 
         <!-- Top-left hints -->
-        <p class="hint-click">click my stickman for a swag kickflip</p>
+        <p class="hint-click">click my stickman for a swag kickflip!!</p>
         <p class="hint-counter">global saldon trick counter: ...</p>
 
         <!-- Music toggle (top-right) -->
@@ -261,6 +297,7 @@
 
             <div class="nav-links">
                 <p data-popup="projects">&gt; my projects</p>
+                <a href="assets/resume.pdf" target="_blank" rel="noopener">&gt; my resume</a>
                 <p data-popup="blog">&gt; blog (more about me)</p>
                 <p data-popup="song">&gt; my fav song</p>
                 <p data-popup="contact">&gt; contact me <span class="text-kaomoji">(^u^)</span></p>
@@ -324,11 +361,29 @@
                 <button class="popup-close">[x]</button>
             </div>
             <div class="popup-body single-col">
-                <div class="popup-text">
-                    <p>hey!! i'm saldon, a <span class="text-comp-sci">comp sci</span> student @ <span class="text-uog">uog</span>.</p>
-                    <p>i love building things, skating, and listening to music way too loud.</p>
-                    <p>more blog posts coming soon... (^u^)</p>
+
+                <div class="blog-entry open">
+                    <div class="blog-entry-header">
+                        <span class="blog-date">&gt; 2026.06.02</span>
+                        <span class="blog-toggle">[-]</span>
+                    </div>
+                    <div class="blog-entry-body">
+                        <p>hey!! i'm saldon, a <span class="text-comp-sci">comp sci</span> student @ <span class="text-uog">uog</span>.</p>
+                        <p>i love building things, skating, and listening to music way too loud.</p>
+                        <p>more entries coming soon... <span class="text-kaomoji">(^u^)</span></p>
+                    </div>
                 </div>
+
+                <div class="blog-entry">
+                    <div class="blog-entry-header">
+                        <span class="blog-date">&gt; 2026.05.15</span>
+                        <span class="blog-toggle">[+]</span>
+                    </div>
+                    <div class="blog-entry-body">
+                        <p>placeholder older entry — replace this with something cool!</p>
+                    </div>
+                </div>
+
             </div>
         </div>
 
@@ -388,6 +443,8 @@
         import { getDatabase, ref, onValue, runTransaction } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
 
         const firebaseConfig = {
+            // please dont change the number of the trick counter :< 
+            // (i just wanted a simple way to store a global counter and this was the easiest solution that didnt require a backend lol)
             apiKey: "AIzaSyBL8Tmrc1JfTNutQknoeAoXp1rs7W_vZ3w",
             authDomain: "saldons-porfolio.firebaseapp.com",
             databaseURL: "https://saldons-porfolio-default-rtdb.firebaseio.com",
@@ -480,7 +537,7 @@
         hoverSfx.volume   = 0.4;
         clickedSfx.volume = 0.4;
 
-        document.querySelectorAll('.nav-links p, .icon-github, .icon-youtube').forEach(el => {
+        document.querySelectorAll('.nav-links p, .nav-links a, .icon-github, .icon-youtube').forEach(el => {
             el.addEventListener('mouseenter', () => {
                 hoverSfx.currentTime = 0;
                 hoverSfx.play().catch(() => {});
@@ -488,6 +545,16 @@
             el.addEventListener('click', () => {
                 clickedSfx.currentTime = 0;
                 clickedSfx.play().catch(() => {});
+            });
+        });
+
+        // --- Blog accordion ---
+        document.querySelectorAll('.blog-entry-header').forEach(header => {
+            header.addEventListener('click', () => {
+                const entry  = header.closest('.blog-entry');
+                const toggle = header.querySelector('.blog-toggle');
+                const isOpen = entry.classList.toggle('open');
+                toggle.textContent = isOpen ? '[-]' : '[+]';
             });
         });
 
