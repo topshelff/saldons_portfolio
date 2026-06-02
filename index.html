@@ -242,7 +242,7 @@
 
         <!-- Top-left hints -->
         <p class="hint-click">click my stickman for a swag kickflip</p>
-        <p class="hint-counter">global saldon trick counter: 67</p>
+        <p class="hint-counter">global saldon trick counter: ...</p>
 
         <!-- Music toggle (top-right) -->
         <button class="music-toggle" id="music-toggle">♫ music [click anywhere to start]</button>
@@ -383,7 +383,24 @@
 
     </div>
 
-    <script>
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+        import { getDatabase, ref, onValue, runTransaction } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyBL8Tmrc1JfTNutQknoeAoXp1rs7W_vZ3w",
+            authDomain: "saldons-porfolio.firebaseapp.com",
+            databaseURL: "https://saldons-porfolio-default-rtdb.firebaseio.com",
+            projectId: "saldons-porfolio",
+            storageBucket: "saldons-porfolio.firebasestorage.app",
+            messagingSenderId: "651209831160",
+            appId: "1:651209831160:web:41fb467a4020118e4a410d",
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db  = getDatabase(app);
+        const countRef = ref(db, 'trickCount');
+
         // --- Music ---
         const audio = document.getElementById('bg-music');
         const musicBtn = document.getElementById('music-toggle');
@@ -428,8 +445,11 @@
 
         const stickman = document.querySelector('.me-idle');
         const counterEl = document.querySelector('.hint-counter');
-        let trickCount = 67;
         let animating = false;
+
+        onValue(countRef, snapshot => {
+            counterEl.textContent = `global saldon trick counter: ${snapshot.val() ?? 0}`;
+        });
 
         stickman.addEventListener('click', () => {
             if (animating) return;
@@ -449,8 +469,7 @@
                     clearInterval(tick);
                     stickman.src = IDLE;
                     animating = false;
-                    trickCount++;
-                    counterEl.textContent = `global saldon trick counter: ${trickCount}`;
+                    runTransaction(countRef, current => (current || 0) + 1);
                 }
             }, FRAME_MS);
         });
