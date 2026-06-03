@@ -248,6 +248,8 @@
         }
         .project-links { display: flex; gap: 8px; font-size: 11px; font-weight: 700; }
         .project-link { text-decoration: none; color: #84b0f2; }
+        .tag-award { background: #fff3cd; border-color: #d4a000; color: #7a5a00; font-weight: 700; }
+        .tag-wip   { background: #ffe5e5; border-color: #e44547; color: #a00; }
         .project-link:hover { text-decoration: underline; }
 
         /* Blog accordion */
@@ -316,10 +318,31 @@
             padding: 0;
             line-height: normal;
         }
+
+        .spooky-text {
+            display: none;
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-family: 'Cascadia Code', 'Cascadia Mono', 'Courier New', monospace;
+            font-size: 10px;
+            color: var(--text);
+            writing-mode: vertical-rl;
+            text-orientation: mixed;
+            rotate: 180deg;
+            white-space: nowrap;
+            letter-spacing: 2px;
+            opacity: 0.5;
+        }
+        html.dark .spooky-text { display: block; }
     </style>
 </head>
 <body>
     <div class="page">
+
+        <!-- Spooky dark mode text -->
+        <p class="spooky-text">isn't this a bit spooky</p>
 
         <!-- Top-left hints -->
         <p class="hint-click">click my stickman for a swag kickflip!!</p>
@@ -343,7 +366,7 @@
 
             <div class="nav-links">
                 <p data-popup="projects">&gt; my projects</p>
-                <a href="assets/resume.pdf" target="_blank" rel="noopener">&gt; my resume</a>
+                <a href="assets/saldontopjor_resume.pdf" target="_blank" rel="noopener">&gt; my resume</a>
                 <p data-popup="blog">&gt; blog (more about me)</p>
                 <p data-popup="song">&gt; my fav song</p>
                 <p data-popup="contact">&gt; contact me <span class="text-kaomoji">(^u^)</span></p>
@@ -359,42 +382,64 @@
             </div>
             <div class="popup-body">
                 <div class="project-card">
-                    <img src="assets/projects/project1.png" alt="project placeholder">
-                    <span class="project-name">project name</span>
-                    <p class="project-desc">A short description of what this project does and why you built it.</p>
+                    <img src="assets/projects/heraplus.png" alt="Hera+">
+                    <span class="project-name">Hera+</span>
+                    <p class="project-desc">A healthcare triage app that empowers women to generate medical reports before doctor visits using body scanning biometrics and symptom data. Built at ElleHacks 2026.</p>
                     <div class="project-tags">
-                        <span class="tag">HTML</span>
-                        <span class="tag">CSS</span>
-                        <span class="tag">JS</span>
+                        <span class="tag tag-award">2nd Place — ElleHacks 2026</span>
+                        <span class="tag">React</span>
+                        <span class="tag">Vite</span>
+                        <span class="tag">Node.js</span>
+                        <span class="tag">Supabase</span>
+                        <span class="tag">Gemini API</span>
+                        <span class="tag">Docker</span>
                     </div>
                     <div class="project-links">
-                        <a href="#" class="project-link">[github]</a>
-                        <a href="#" class="project-link">[live]</a>
+                        <a href="https://github.com/topshelff/HeraPlus" target="_blank" rel="noopener" class="project-link">[github]</a>
+                        <a href="https://devpost.com/software/heradx" target="_blank" rel="noopener" class="project-link">[devpost]</a>
                     </div>
                 </div>
                 <div class="project-card">
-                    <img src="assets/projects/project2.png" alt="project placeholder">
-                    <span class="project-name">another project</span>
-                    <p class="project-desc">A short description of what this project does and why you built it.</p>
-                    <div class="project-tags">
-                        <span class="tag">Python</span>
-                        <span class="tag">Flask</span>
-                    </div>
-                    <div class="project-links">
-                        <a href="#" class="project-link">[github]</a>
-                    </div>
-                </div>
-                <div class="project-card">
-                    <img src="assets/projects/project3.png" alt="project placeholder">
-                    <span class="project-name">cool thing i made</span>
-                    <p class="project-desc">A short description of what this project does and why you built it.</p>
+                    <img src="assets/projects/lockin.png" alt="LockIn">
+                    <span class="project-name">LockIn</span>
+                    <p class="project-desc">A Valorant teammate matchmaking platform that uses AI to connect players of color and LGBTQ+ gamers with compatible, harassment-free teammates. Built at HackHive 2026.</p>
                     <div class="project-tags">
                         <span class="tag">React</span>
+                        <span class="tag">Vite</span>
+                        <span class="tag">Node.js</span>
+                        <span class="tag">Supabase</span>
+                        <span class="tag">Gemini API</span>
+                        <span class="tag">Figma</span>
                         <span class="tag">Vercel</span>
                     </div>
                     <div class="project-links">
-                        <a href="#" class="project-link">[github]</a>
+                        <a href="https://github.com/VivChhabra/LockIn" target="_blank" rel="noopener" class="project-link">[github]</a>
+                        <a href="https://devpost.com/software/lockin-s3bykq" target="_blank" rel="noopener" class="project-link">[devpost]</a>
+                    </div>
+                </div>
+                <div class="project-card">
+                    <img src="assets/projects/portfolio.png" alt="saldon's epic website">
+                    <span class="project-name">saldon's epic website</span>
+                    <p class="project-desc">My personal portfolio site with a minimalistic and slightly retro aesthetic. Features me as a skateboarding stickman, draggable popup windows, and a global trick counter powered by Firebase! Y'know, just keeping it simple. :D</p>
+                    <div class="project-tags">
+                        <span class="tag">HTML</span>
+                        <span class="tag">CSS</span>
+                        <span class="tag">Javascript</span>
+                        <span class="tag">Firebase</span>
+                        <span class="tag">Figma</span>
+                        <span class="tag">Vercel</span>
+                    </div>
+                    <div class="project-links">
+                        <a href="https://github.com/topshelff/saldons_portfolio" target="_blank" rel="noopener" class="project-link">[github]</a>
                         <a href="#" class="project-link">[live]</a>
+                    </div>
+                </div>
+                <div class="project-card">
+                    <img src="assets/projects/project1.png" alt="mobile app">
+                    <span class="project-name">mobile app</span>
+                    <p class="project-desc">pssst, i'm currently working on a mobile app! Check out my resume for the details of it!</p>
+                    <div class="project-tags">
+                        <span class="tag tag-wip">work in progress</span>
                     </div>
                 </div>
             </div>
@@ -419,7 +464,7 @@
                         <p> i remember i'd always go on my ipad and watch a youtube channel called <a href="https://www.youtube.com/channel/UCCErzmHdf_aFur6s7MKNTcA" target="_blank">girlsskatenetwork</a> and it would be one of my favourite channels because it would show awesome montages of other girls that enjoyed skateboarding like me (and they were super good at it too!)</p>
 
                         <p> i've been trying to get back into editing and filming videos so i've decided i'm going to make a video of me trying to get my kickflips down consistently, just so i can be like my stickman on this website lol! </p>
-                        <p> anways, i hope you have a good day! it's kinda fun writing here c:</p>
+                        <p> anyways, i hope you have a good day! it's kinda fun writing here c:</p>
                         <br>
                         <p>- saldon!</p>
                     </div>
@@ -435,7 +480,8 @@
             </div>
             <div class="popup-body single-col">
                 <div class="popup-text">
-                    <p>coming soon... stay tuned <span class="text-kaomoji">(^u^)</span></p>
+                    <p>too many good songs... can't choose one...!</span></p>
+                    <p>(there will be a song here at some point, i promise)</p>
                 </div>
             </div>
         </div>
@@ -448,9 +494,8 @@
             </div>
             <div class="popup-body single-col">
                 <div class="popup-text">
-                    <p>wanna chat? reach me at:</p>
-                    <p><a href="mailto:stopdrawer@gmail.com" class="project-link">[email]</a> stopdrawer@gmail.com</p>
-                    <p><a href="#" class="project-link">[github]</a> coming soon</p>
+                    <p>i'm always up for a chat! reach me at:</p>
+                    <p><a href="mailto:saldontops@yahoo.ca" class="project-link">[email]</a> saldontops@yahoo.ca</p>
                 </div>
             </div>
         </div>
@@ -465,11 +510,11 @@
                     </svg>
                 </a>
                 <!-- YouTube (Bootstrap Icons) -->
-                <!--
-                <svg class="icon-youtube" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16">
-                    <path d="M8.051 1.999h.089c.822.003 4.987.033 6.11.335a2.01 2.01 0 0 1 1.415 1.42c.101.38.172.883.22 1.402l.01.104.022.26.008.104c.065.914.073 1.77.074 1.957v.075c-.001.194-.01 1.108-.082 2.06l-.008.105-.009.104c-.05.572-.124 1.14-.235 1.558a2.007 2.007 0 0 1-1.415 1.42c-1.16.312-5.569.334-6.18.335h-.142c-.309 0-1.587-.006-2.927-.052l-.17-.006-.087-.004-.171-.007-.171-.007c-1.11-.049-2.167-.128-2.654-.26a2.007 2.007 0 0 1-1.415-1.419c-.111-.417-.185-.986-.235-1.558L.09 9.82l-.008-.104A31.4 31.4 0 0 1 0 7.68v-.123c.002-.215.01-.958.064-1.778l.007-.103.003-.052.008-.104.022-.26.01-.104c.048-.519.119-1.023.22-1.402a2.007 2.007 0 0 1 1.415-1.42c.487-.13 1.544-.21 2.654-.26l.17-.007.172-.006.086-.003.171-.007A99.788 99.788 0 0 1 7.858 2h.193zM6.4 5.209v4.818l4.157-2.408L6.4 5.209z"/>
-                </svg>
-                -->
+                <a href="https://www.youtube.com/@topshelff" target="_blank" rel="noopener">
+                    <svg class="icon-youtube" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16">
+                        <path d="M8.051 1.999h.089c.822.003 4.987.033 6.11.335a2.01 2.01 0 0 1 1.415 1.42c.101.38.172.883.22 1.402l.01.104.022.26.008.104c.065.914.073 1.77.074 1.957v.075c-.001.194-.01 1.108-.082 2.06l-.008.105-.009.104c-.05.572-.124 1.14-.235 1.558a2.007 2.007 0 0 1-1.415 1.42c-1.16.312-5.569.334-6.18.335h-.142c-.309 0-1.587-.006-2.927-.052l-.17-.006-.087-.004-.171-.007-.171-.007c-1.11-.049-2.167-.128-2.654-.26a2.007 2.007 0 0 1-1.415-1.419c-.111-.417-.185-.986-.235-1.558L.09 9.82l-.008-.104A31.4 31.4 0 0 1 0 7.68v-.123c.002-.215.01-.958.064-1.778l.007-.103.003-.052.008-.104.022-.26.01-.104c.048-.519.119-1.023.22-1.402a2.007 2.007 0 0 1 1.415-1.42c.487-.13 1.544-.21 2.654-.26l.17-.007.172-.006.086-.003.171-.007A99.788 99.788 0 0 1 7.858 2h.193zM6.4 5.209v4.818l4.157-2.408L6.4 5.209z"/>
+                    </svg>
+                </a>
             </div>
             <div class="footer-copyright">
                 <!-- Copyright circle (Bootstrap Icons) -->
@@ -503,7 +548,12 @@
         const countRef = ref(db, 'trickCount');
 
         // --- Dark mode ---
-        const darkBtn = document.getElementById('dark-toggle');
+        const darkBtn    = document.getElementById('dark-toggle');
+        const offSfx     = new Audio('assets/sounds/off_switch.wav');
+        const onSfx      = new Audio('assets/sounds/on_switch.wav');
+        offSfx.volume    = 0.6;
+        onSfx.volume     = 0.6;
+
         const isDark  = localStorage.getItem('darkMode') === 'true';
         if (isDark) {
             document.documentElement.classList.add('dark');
@@ -513,6 +563,9 @@
             const on = document.documentElement.classList.toggle('dark');
             darkBtn.textContent = on ? '◑ dark [on]' : '◑ dark [off]';
             localStorage.setItem('darkMode', on);
+            const sfx = on ? offSfx : onSfx;
+            sfx.currentTime = 0;
+            sfx.play().catch(() => {});
         });
 
         // --- Music ---
@@ -594,7 +647,7 @@
         hoverSfx.volume   = 0.4;
         clickedSfx.volume = 0.4;
 
-        document.querySelectorAll('.nav-links p, .nav-links a, .icon-github').forEach(el => {
+        document.querySelectorAll('.nav-links p, .nav-links a, .icon-github, .icon-youtube').forEach(el => {
             el.addEventListener('mouseenter', () => {
                 hoverSfx.currentTime = 0;
                 hoverSfx.play().catch(() => {});
@@ -621,8 +674,13 @@
                 const popup = document.getElementById('popup-' + link.dataset.popup);
                 if (!popup) return;
                 if (!popup.style.left) {
-                    popup.style.left = (window.innerWidth  / 2 - popup.offsetWidth  / 2) + 'px';
-                    popup.style.top  = (window.innerHeight / 2 - popup.offsetHeight / 2) + 'px';
+                    if (link.dataset.popup === 'projects') {
+                        popup.style.left = '24px';
+                        popup.style.top  = (window.innerHeight * 0.08) + 'px';
+                    } else {
+                        popup.style.left = (window.innerWidth  / 2 - popup.offsetWidth  / 2) + 'px';
+                        popup.style.top  = (window.innerHeight / 2 - popup.offsetHeight / 2) + 'px';
+                    }
                 }
                 popup.classList.add('open');
             });
@@ -648,6 +706,13 @@
             });
             document.addEventListener('mouseup', () => { dragging = false; });
         });
+
+        // Auto-open blog on the right side on load
+        const blogPopup = document.getElementById('popup-blog');
+        blogPopup.classList.add('open');
+        blogPopup.style.left = (window.innerWidth - blogPopup.offsetWidth - 24) + 'px';
+        blogPopup.style.top  = (window.innerHeight * 0.08) + 'px';
+
     </script>
 </body>
 </html>
