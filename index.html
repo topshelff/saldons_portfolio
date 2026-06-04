@@ -90,6 +90,40 @@
         }
         html.dark .me-idle { filter: invert(1); }
 
+        .stickman-scene {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .ground-container {
+            width: min(423px, 40vh);
+            height: 6px;
+            overflow: hidden;
+            margin-top: -4px;
+            margin-left: -12px;
+        }
+
+        .ground-inner {
+            display: flex;
+            height: 100%;
+            animation: scrollGround 3s linear infinite;
+        }
+
+        .ground-img {
+            height: 100%;
+            width: auto;
+            flex-shrink: 0;
+            display: block;
+        }
+
+        html.dark .ground-img { filter: invert(1); }
+
+        @keyframes scrollGround {
+            from { transform: translateX(0); }
+            to   { transform: translateX(-50%); }
+        }
+
         .welcome-text {
             margin-top: min(13px, 1.5vh);
             font-family: 'Cascadia Code', 'Cascadia Mono', 'Courier New', monospace;
@@ -347,7 +381,7 @@
         <p class="spooky-text">isn't this a bit spooky</p>
 
         <!-- Top-left hints -->
-        <p class="hint-click">click my stickman for a swag kickflip!!</p>
+        <p class="hint-click">click my stickman (or press your spacebar) for a swag kickflip!!</p>
         <p class="hint-counter">global saldon trick counter: ...</p>
 
         <!-- Music toggle (top-right) -->
@@ -360,7 +394,15 @@
         <!-- Centered main content -->
         <div class="main-content">
 
-            <img class="me-idle" src="assets/me(idle).png" alt="saldon idle">
+            <div class="stickman-scene">
+                <img class="me-idle" src="assets/me(idle).png" alt="saldon idle">
+                <div class="ground-container">
+                    <div class="ground-inner">
+                        <img src="assets/ground.png" class="ground-img" alt="">
+                        <img src="assets/ground.png" class="ground-img" alt="">
+                    </div>
+                </div>
+            </div>
 
             <p class="welcome-text">welcome to saldon's <span class="text-epic">epic</span> website!!! :D</p>
 
@@ -626,7 +668,7 @@
             counterEl.textContent = `global saldon trick counter: ${snapshot.val() ?? 0}`;
         });
 
-        stickman.addEventListener('click', () => {
+        function doKickflip() {
             if (animating) return;
             animating = true;
 
@@ -647,6 +689,15 @@
                     runTransaction(countRef, current => (current || 0) + 1);
                 }
             }, FRAME_MS);
+        }
+
+        stickman.addEventListener('click', doKickflip);
+
+        document.addEventListener('keydown', e => {
+            if (e.code === 'Space' && e.target === document.body) {
+                e.preventDefault();
+                doKickflip();
+            }
         });
 
         // --- Hover + click sounds ---
