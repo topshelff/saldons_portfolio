@@ -280,7 +280,7 @@
 
         /* Blog accordion */
         #popup-blog { min-width: 560px; max-width: 640px; }
-        #popup-projects.open { width: 520px; height: 380px; }
+        #popup-projects.open { width: 620px; height: 460px; }
 
         .blog-entry { border-bottom: 1px solid var(--border); padding-bottom: 8px; }
         .blog-entry:last-child { border-bottom: none; }
@@ -310,6 +310,19 @@
         .blog-entry-body p:last-child { margin-bottom: 0; }
         .blog-entry.open .blog-entry-body { display: block; }
         html.dark .blog-entry-body a { color: #a8c8ff; }
+
+        .blog-video {
+            width: 100%;
+            aspect-ratio: 16 / 9;
+            margin-bottom: 10px;
+            border: 2px solid #84b0f2;
+            box-shadow: 4px 4px 0 #000;
+        }
+        .blog-video video {
+            width: 100%;
+            height: 100%;
+            display: block;
+        }
 
         /* Generic popup content */
         .popup-text {
@@ -485,8 +498,25 @@
 
                 <div class="blog-entry open">
                     <div class="blog-entry-header">
-                        <span class="blog-date">&gt; 2026.06.02</span>
+                        <span class="blog-date">&gt; 2026.06.09</span>
                         <span class="blog-toggle">[-]</span>
+                    </div>
+                    <div class="blog-entry-body">
+                        <div class="blog-video">
+                            <video src="assets/blog/jumpingstick_kendama.mp4" controls></video>
+                        </div>
+                        <p>i've been getting back into kendamas (japanese skill toy) this summer and uh, it's been a lot of fun! :D</p>
+                        <br>
+                        <p>this trick here is called a jumping stick!</p>
+                        <br> 
+                        <p>my neighbor's dog likes to bark eeeek</p>
+                    </div>
+                </div>
+
+                <div class="blog-entry">
+                    <div class="blog-entry-header">
+                        <span class="blog-date">&gt; 2026.06.02</span>
+                        <span class="blog-toggle">[+]</span>
                     </div>
                     <div class="blog-entry-body">
                         <p> hello person viewing my website! :D </p>
@@ -704,6 +734,8 @@
         });
 
         // --- Blog accordion ---
+        document.querySelectorAll('.blog-video video').forEach(v => v.volume = 0.3);
+
         document.querySelectorAll('.blog-entry-header').forEach(header => {
             header.addEventListener('click', () => {
                 const entry  = header.closest('.blog-entry');
@@ -722,6 +754,15 @@
                     if (link.dataset.popup === 'projects') {
                         popup.style.left = '24px';
                         popup.style.top  = (window.innerHeight * 0.08) + 'px';
+                    } else if (link.dataset.popup === 'song') {
+                        popup.style.left = '90px';
+                        popup.style.top  = (window.innerHeight * 0.08 + 540) + 'px';
+                    } else if (link.dataset.popup === 'contact') {
+                        popup.style.left = '160px';
+                        popup.style.top  = (window.innerHeight * 0.08 + 690) + 'px';
+                    } else if (link.dataset.popup === 'blog') {
+                        popup.style.left = (window.innerWidth  / 2 - popup.offsetWidth  / 2 + 260) + 'px';
+                        popup.style.top  = (window.innerHeight * 0.10) + 'px';
                     } else {
                         popup.style.left = (window.innerWidth  / 2 - popup.offsetWidth  / 2) + 'px';
                         popup.style.top  = (window.innerHeight / 2 - popup.offsetHeight / 2) + 'px';
