@@ -279,8 +279,8 @@
         .project-link:hover { text-decoration: underline; }
 
         /* Blog accordion */
-        #popup-blog { min-width: 560px; max-width: 640px; }
-        #popup-projects.open { width: 620px; height: 460px; }
+        #popup-blog { min-width: 460px; max-width: 540px; }
+        #popup-projects.open { width: 500px; height: 380px; }
 
         .blog-entry { border-bottom: 1px solid var(--border); padding-bottom: 8px; }
         .blog-entry:last-child { border-bottom: none; }
@@ -751,22 +751,33 @@
                 const popup = document.getElementById('popup-' + link.dataset.popup);
                 if (!popup) return;
                 if (!popup.style.left) {
+                    popup.style.visibility = 'hidden';
+                    popup.style.display = 'block';
+                    const pw = popup.offsetWidth;
+                    const ph = popup.offsetHeight;
+                    popup.style.display = '';
+                    popup.style.visibility = '';
+
+                    let left, top;
                     if (link.dataset.popup === 'projects') {
-                        popup.style.left = '24px';
-                        popup.style.top  = (window.innerHeight * 0.08) + 'px';
+                        left = window.innerWidth  * 0.01;
+                        top  = window.innerHeight * 0.08;
                     } else if (link.dataset.popup === 'song') {
-                        popup.style.left = '90px';
-                        popup.style.top  = (window.innerHeight * 0.08 + 540) + 'px';
+                        left = window.innerWidth  * 0.01;
+                        top  = window.innerHeight * 0.74;
                     } else if (link.dataset.popup === 'contact') {
-                        popup.style.left = '160px';
-                        popup.style.top  = (window.innerHeight * 0.08 + 690) + 'px';
+                        left = window.innerWidth  * 0.64;
+                        top  = window.innerHeight * 0.78;
                     } else if (link.dataset.popup === 'blog') {
-                        popup.style.left = (window.innerWidth  / 2 - popup.offsetWidth  / 2 + 260) + 'px';
-                        popup.style.top  = (window.innerHeight * 0.10) + 'px';
+                        left = window.innerWidth  * 0.58;
+                        top  = window.innerHeight * 0.06;
                     } else {
-                        popup.style.left = (window.innerWidth  / 2 - popup.offsetWidth  / 2) + 'px';
-                        popup.style.top  = (window.innerHeight / 2 - popup.offsetHeight / 2) + 'px';
+                        left = window.innerWidth  / 2 - pw / 2;
+                        top  = window.innerHeight / 2 - ph / 2;
                     }
+
+                    popup.style.left = Math.max(0, Math.min(left, window.innerWidth  - pw)) + 'px';
+                    popup.style.top  = Math.max(0, Math.min(top,  window.innerHeight - ph)) + 'px';
                 }
                 popup.classList.add('open');
             });
