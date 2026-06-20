@@ -376,6 +376,53 @@
             opacity: 0.5;
         }
         html.dark .spooky-text { display: block; }
+
+        /* --- Fav song popup player --- */
+        #popup-song {
+            width: 280px;
+            min-width: 280px;
+        }
+        .fav-song-player {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 16px;
+            min-height: 140px;
+        }
+        .fav-dog {
+            width: 120px;
+            height: 120px;
+            object-fit: contain;
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+        .fav-dog.spinning {
+            animation: spin 2s linear infinite;
+        }
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to   { transform: rotate(360deg); }
+        }
+.fav-dog-group {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+        }
+        .fav-song-label {
+            font-size: 11px;
+            text-align: center;
+            white-space: normal;
+            max-width: 200px;
+        }
+        .fav-song-subtext {
+            font-size: 9px;
+            font-style: italic;
+            text-align: center;
+            max-width: 200px;
+            white-space: normal;
+        }
     </style>
 </head>
 <body>
@@ -389,11 +436,13 @@
         <p class="hint-counter">global saldon trick counter: ...</p>
 
         <!-- Music toggle (top-right) -->
-        <button class="music-toggle" id="music-toggle">♫ music [click anywhere to start]</button>
+        <button class="music-toggle" id="music-toggle">♫ bgm [click anywhere to start]</button>
         <button class="dark-toggle" id="dark-toggle">◑ dark [off]</button>
 
         <!-- Background music -->
         <audio id="bg-music" loop src="assets/music/comfy vibes - LilyPichu.webm"></audio>
+        <!-- Fav song (update src when you pick a song!) -->
+        <audio id="fav-song" src="assets/music/We Are One (Ole Ola) [The Official 2014 FIFA World Cup Song] (Olodum Mix).mp3"></audio>
 
         <!-- Centered main content -->
         <div class="main-content">
@@ -411,7 +460,7 @@
                 <p data-popup="projects">&gt; my projects</p>
                 <a href="assets/saldontopjor_resume.pdf" target="_blank" rel="noopener">&gt; my resume</a>
                 <p data-popup="blog">&gt; blog (more about me)</p>
-                <p data-popup="song">&gt; my fav song</p>
+                <p data-popup="song">&gt; a good song! ♫</p>
                 <p data-popup="contact">&gt; contact me <span class="text-kaomoji">(^u^)</span></p>
             </div>
 
@@ -532,16 +581,19 @@
             </div>
         </div>
 
-        <!-- Popup: My Fav Song -->
+        <!-- Popup: a good song! ♫ -->
         <div class="popup-window" id="popup-song">
             <div class="popup-titlebar">
-                <span class="popup-title">&gt; my fav song</span>
+                <span class="popup-title">&gt; a good song! ♫</span>
                 <button class="popup-close">[x]</button>
             </div>
             <div class="popup-body single-col">
-                <div class="popup-text">
-                    <p>too many good songs... can't choose one...!</span></p>
-                    <p>(there will be a song here at some point, i promise)</p>
+                <div class="fav-song-player">
+<div class="fav-dog-group">
+                        <img src="assets/tinky_with_headphones.png" id="fav-dog" class="fav-dog" alt="tsekyi with headphones" title="click to play!">
+                        <p class="fav-song-label">♫ click tsekyi to play!</p>
+                        <p class="fav-song-subtext">(perfect for world cup season!! allez les bleus!!!)</p>
+                    </div>
                 </div>
             </div>
         </div>
@@ -645,7 +697,7 @@
             if (musicStarted) return;
             musicStarted = true;
             audio.play().catch(() => {});
-            musicBtn.textContent = '♫ music [on]';
+            musicBtn.textContent = '♫ bgm [on]';
         }
 
         document.addEventListener('click', startMusic, { once: true });
@@ -655,8 +707,94 @@
             startMusic();
             muted = !muted;
             audio.muted = muted;
-            musicBtn.textContent = muted ? '♫ music [off]' : '♫ music [on]';
+            musicBtn.textContent = muted ? '♫ bgm [off]' : '♫ bgm [on]';
         });
+
+        // --- Fav song player ---
+        function fadeBgMusic(toVolume, duration, callback) {
+            const from = audio.volume;
+            const steps = 20;
+            const stepMs = duration / steps;
+            const step = (toVolume - from) / steps;
+            let i = 0;
+            const t = setInterval(() => {
+                i++;
+                audio.volume = Math.max(0, Math.min(0.2, from + step * i));
+                if (i >= steps) {
+                    clearInterval(t);
+                    if (callback) callback();
+                }
+            }, stepMs);
+        }
+
+        function restoreBgMusic() {
+            audio.volume = 0;
+            if (musicStarted && !muted) {
+                audio.play().catch(() => {});
+                fadeBgMusic(0.2, 500, null);
+            }
+        }
+
+        const favDog = document.getElementById('fav-dog');
+        const favSong = document.getElementById('fav-song');
+        favSong.volume = 0.2;
+        const FAV_SONG_TITLE = '♫ now playing: We Are One (Ole Ola) - Pitbull ft. Jennifer Lopez & Claudia Leitte';
+        const favLabel = document.querySelector('.fav-song-label');
+        let favPlaying = false;
+        let favRotationAngle = 0;
+
+        function pauseFavSpinning() {
+            const matrix = window.getComputedStyle(favDog).transform;
+            if (matrix && matrix !== 'none') {
+                const v = matrix.match(/matrix\((.+)\)/)[1].split(',');
+                const raw = Math.atan2(parseFloat(v[1]), parseFloat(v[0])) * (180 / Math.PI);
+                favRotationAngle = (raw + 360) % 360;
+            }
+            favDog.classList.remove('spinning');
+            favDog.style.transform = `rotate(${favRotationAngle}deg)`;
+        }
+
+        function resumeFavSpinning() {
+            favDog.style.animationDelay = `${-(favRotationAngle / 360) * 2}s`;
+            favDog.style.transform = '';
+            favDog.classList.add('spinning');
+        }
+
+        function resetFavSpinning() {
+            favRotationAngle = 0;
+            favDog.classList.remove('spinning');
+            favDog.style.transform = '';
+            favDog.style.animationDelay = '';
+        }
+
+        function stopFavSong() {
+            favSong.pause();
+            favSong.currentTime = 0;
+            favPlaying = false;
+            resetFavSpinning();
+            favLabel.textContent = '♫ click tsekyi to play!';
+            restoreBgMusic();
+        }
+
+        favDog.addEventListener('click', () => {
+            if (!favPlaying) {
+                favPlaying = true;
+                fadeBgMusic(0, 500, () => {
+                    audio.pause();
+                    favSong.play().catch(() => {});
+                });
+                resumeFavSpinning();
+                favLabel.textContent = FAV_SONG_TITLE;
+            } else {
+                favSong.pause();
+                favPlaying = false;
+                pauseFavSpinning();
+                favLabel.textContent = '♫ click tsekyi to play!';
+                restoreBgMusic();
+            }
+        });
+
+        favSong.addEventListener('ended', stopFavSong);
 
         // --- Kickflip ---
         const trickSfx = new Audio('assets/sounds/trick.mp3');
@@ -764,7 +902,7 @@
                         top  = window.innerHeight * 0.08;
                     } else if (link.dataset.popup === 'song') {
                         left = window.innerWidth  * 0.01;
-                        top  = window.innerHeight * 0.74;
+                        top  = window.innerHeight * 0.60;
                     } else if (link.dataset.popup === 'contact') {
                         left = window.innerWidth  * 0.64;
                         top  = window.innerHeight * 0.78;
@@ -784,7 +922,13 @@
         });
 
         document.querySelectorAll('.popup-close').forEach(btn => {
-            btn.addEventListener('click', () => btn.closest('.popup-window').classList.remove('open'));
+            btn.addEventListener('click', () => {
+                const popup = btn.closest('.popup-window');
+                popup.classList.remove('open');
+                if (popup.id === 'popup-song' && favPlaying) {
+                    stopFavSong();
+                }
+            });
         });
 
         document.querySelectorAll('.popup-titlebar').forEach(bar => {
