@@ -138,8 +138,32 @@
         .text-uog       { color: #e44547; }
         .text-kaomoji   { color: #f0a0d0; }
 
+        .tag-new {
+            position: absolute;
+            left: calc(100% + 6px);
+            top: 50%;
+            transform: translateY(-50%);
+            color: #e44547;
+            font-size: 0.85em;
+            font-weight: 700;
+            white-space: nowrap;
+            animation: blink-new 1s step-start infinite;
+        }
+        @keyframes blink-new {
+            0%, 100% { opacity: 1; }
+            50%       { opacity: 0; }
+        }
+
+        .tag-new-inline {
+            color: #e44547;
+            font-size: 0.85em;
+            font-weight: 700;
+            margin-left: 8px;
+            animation: blink-new 1s step-start infinite;
+        }
+
         .nav-links {
-            margin-top: min(16px, 2vh);
+            margin-top: min(6px, 0.8vh);
             font-family: 'Cascadia Code', 'Cascadia Mono', 'Courier New', monospace;
             font-size: clamp(13px, 2vh, 19px);
             font-weight: 700;
@@ -151,6 +175,7 @@
             cursor: pointer;
             transition: transform 0.1s ease;
             transform-origin: left center;
+            position: relative;
         }
         .nav-links a {
             text-decoration: none;
@@ -193,6 +218,11 @@
 
         .icon-copyright { width: 12px; height: 12px; fill: var(--icon); }
 
+        @font-face {
+            font-family: 'NintendoDS';
+            src: url('assets/Nintendo-DS-BIOS.ttf') format('truetype');
+        }
+
         /* Popup windows */
         .popup-window {
             position: absolute;
@@ -222,6 +252,7 @@
         .popup-titlebar:active { cursor: grabbing; }
 
         .popup-title { font-weight: 700; font-size: 14px; color: #000; }
+        .popup-title .text-kaomoji { color: #000; }
 
         .popup-close {
             background: none;
@@ -280,7 +311,7 @@
 
         /* Blog accordion */
         #popup-blog { min-width: 460px; max-width: 540px; }
-        #popup-projects.open { width: 500px; height: 380px; }
+        #popup-projects.open { width: 560px; height: 430px; }
 
         .blog-entry { border-bottom: 1px solid var(--border); padding-bottom: 8px; }
         .blog-entry:last-child { border-bottom: none; }
@@ -379,8 +410,9 @@
 
         /* --- Fav song popup player --- */
         #popup-song {
-            width: 280px;
-            min-width: 280px;
+            width: 230px;
+            min-width: 230px;
+            height: 220px;
         }
         .fav-song-player {
             position: relative;
@@ -428,6 +460,21 @@
 <body>
     <div class="page">
 
+        <!-- bottom left gifs -->
+        <div style="position:absolute; left:8px; bottom:0px; display:flex; align-items:flex-end; gap:6px;">
+            <a href="https://www.youtube.com/watch?v=qcVgYvAhFsk" target="_blank" rel="noopener">
+                <img src="assets/gifs/toro.gif" alt="toro" style="display:block; cursor:pointer; width:35px;">
+            </a>
+            <img src="assets/gifs/aewsome_face.gif" alt="awesome face" style="display:block; width:px; position:relative; bottom:5px;">
+        </div>
+
+        <!-- coop work term reports -->
+        <a href="coop.html" style="position:absolute; left:800px; top:80px; display:flex; flex-direction:column; align-items:center; gap:4px; text-decoration:none;">
+            <img src="assets/gifs/file_folder.gif" alt="file folder gif">
+            <span style="font-family:'NintendoDS',monospace; font-size:16px; color:var(--text); text-align:center; white-space:nowrap;">co-op work term reports here! :D</span>
+        </a>
+
+
         <!-- Spooky dark mode text -->
         <p class="spooky-text">isn't this a bit spooky</p>
 
@@ -442,7 +489,7 @@
         <!-- Background music -->
         <audio id="bg-music" loop src="assets/music/comfy vibes - LilyPichu.webm"></audio>
         <!-- Fav song (update src when you pick a song!) -->
-        <audio id="fav-song" src="assets/music/We Are One (Ole Ola) [The Official 2014 FIFA World Cup Song] (Olodum Mix).mp3"></audio>
+        <audio id="fav-song" src="assets/music/George Michael - You Know That I Want To (Official Audio).opus"></audio>
 
         <!-- Centered main content -->
         <div class="main-content">
@@ -459,7 +506,7 @@
             <div class="nav-links">
                 <p data-popup="projects">&gt; my projects</p>
                 <a href="assets/saldontopjor_resume.pdf" target="_blank" rel="noopener">&gt; my resume</a>
-                <p data-popup="blog">&gt; blog (more about me)</p>
+                <p data-popup="blog">&gt; blog (more about me) <span class="tag-new">[new!]</span></p>
                 <p data-popup="song">&gt; a good song! ♫</p>
                 <p data-popup="contact">&gt; contact me <span class="text-kaomoji">(^u^)</span></p>
             </div>
@@ -547,6 +594,21 @@
 
                 <div class="blog-entry open">
                     <div class="blog-entry-header">
+                        <span class="blog-date">&gt; 2026.09.18<span
+                        class="tag-new-inline" id="blog-entry-new">[new!]</span></span>
+                        <span class="blog-toggle">[-]</span>
+                    </div>
+                    <div class="blog-entry-body">
+                        <p>my neighborhood has a ton of dogs and it's funny when one dog starts barking and all the other dogs start barking from their backyards, it's like a little orchestra!</p>
+                        <br>
+                        <p>on my daily walks with tsekyi however, im always reminded by other dog walkers how this orchestra is definitely not liked upon by the hoomans lol</p>
+                        <br>
+                        <p>- saldon!</p>
+                    </div>
+                </div>
+
+                <div class="blog-entry">
+                    <div class="blog-entry-header">
                         <span class="blog-date">&gt; 2026.06.09</span>
                         <span class="blog-toggle">[-]</span>
                     </div>
@@ -592,7 +654,7 @@
 <div class="fav-dog-group">
                         <img src="assets/tinky_with_headphones.png" id="fav-dog" class="fav-dog" alt="tsekyi with headphones" title="click to play!">
                         <p class="fav-song-label">♫ click tsekyi to play!</p>
-                        <p class="fav-song-subtext">(perfect for world cup season!! allez les bleus!!!)</p>
+                        <p class="fav-song-subtext">(george michael grooooove)</p>
                     </div>
                 </div>
             </div>
@@ -604,11 +666,12 @@
                 <span class="popup-title">&gt; contact me <span class="text-kaomoji">(^u^)</span></span>
                 <button class="popup-close">[x]</button>
             </div>
-            <div class="popup-body single-col">
-                <div class="popup-text">
+            <div class="popup-body single-col" style="display:flex; align-items:center; gap:16px;">
+                <div class="popup-text" style="flex:1;">
                     <p>i'm always up for a chat! reach me at:</p>
                     <p><a href="mailto:saldontops@yahoo.ca" class="project-link">[email]</a> saldontops@yahoo.ca</p>
                 </div>
+                <img src="assets/gifs/SWINGING_EMAIL.gif" alt="swinging email sign" style="width:90px; flex-shrink:0;">
             </div>
         </div>
 
@@ -689,7 +752,7 @@
         // --- Music ---
         const audio = document.getElementById('bg-music');
         const musicBtn = document.getElementById('music-toggle');
-        audio.volume = 0.2;
+        audio.volume = 0.1;
         let musicStarted = false;
         let muted = false;
 
@@ -719,7 +782,7 @@
             let i = 0;
             const t = setInterval(() => {
                 i++;
-                audio.volume = Math.max(0, Math.min(0.2, from + step * i));
+                audio.volume = Math.max(0, Math.min(0.1, from + step * i));
                 if (i >= steps) {
                     clearInterval(t);
                     if (callback) callback();
@@ -737,8 +800,8 @@
 
         const favDog = document.getElementById('fav-dog');
         const favSong = document.getElementById('fav-song');
-        favSong.volume = 0.2;
-        const FAV_SONG_TITLE = '♫ now playing: We Are One (Ole Ola) - Pitbull ft. Jennifer Lopez & Claudia Leitte';
+        favSong.volume = 0.1;
+        const FAV_SONG_TITLE = '♫ now playing: You Know That I Want To - George Michael';
         const favLabel = document.querySelector('.fav-song-label');
         let favPlaying = false;
         let favRotationAngle = 0;
@@ -883,42 +946,77 @@
             });
         });
 
+        // --- [new!] blog tag ---
+        const newTag = document.querySelector('.tag-new');
+        const newTagEntry = document.getElementById('blog-entry-new');
+        if (localStorage.getItem('blogSeen') === 'true') {
+            newTag.style.visibility = 'hidden';
+            if (newTagEntry) newTagEntry.style.visibility = 'hidden';
+        }
+
         // --- Popups ---
         document.querySelectorAll('.nav-links p[data-popup]').forEach(link => {
             link.addEventListener('click', () => {
+                if (link.dataset.popup === 'blog') {
+                    localStorage.setItem('blogSeen', 'true');
+                    newTag.style.visibility = 'hidden';
+                }
                 const popup = document.getElementById('popup-' + link.dataset.popup);
                 if (!popup) return;
-                if (!popup.style.left) {
-                    popup.style.visibility = 'hidden';
-                    popup.style.display = 'block';
-                    const pw = popup.offsetWidth;
-                    const ph = popup.offsetHeight;
-                    popup.style.display = '';
-                    popup.style.visibility = '';
-
-                    let left, top;
-                    if (link.dataset.popup === 'projects') {
-                        left = window.innerWidth  * 0.01;
-                        top  = window.innerHeight * 0.08;
-                    } else if (link.dataset.popup === 'song') {
-                        left = window.innerWidth  * 0.01;
-                        top  = window.innerHeight * 0.60;
-                    } else if (link.dataset.popup === 'contact') {
-                        left = window.innerWidth  * 0.64;
-                        top  = window.innerHeight * 0.78;
-                    } else if (link.dataset.popup === 'blog') {
-                        left = window.innerWidth  * 0.58;
-                        top  = window.innerHeight * 0.06;
-                    } else {
-                        left = window.innerWidth  / 2 - pw / 2;
-                        top  = window.innerHeight / 2 - ph / 2;
-                    }
-
-                    popup.style.left = Math.max(0, Math.min(left, window.innerWidth  - pw)) + 'px';
-                    popup.style.top  = Math.max(0, Math.min(top,  window.innerHeight - ph)) + 'px';
+                if (popup.classList.contains('open')) {
+                    popup.classList.remove('open');
+                    if (popup.id === 'popup-song' && favPlaying) stopFavSong();
+                    return;
                 }
                 popup.classList.add('open');
+                if (!popup.dataset.positioned) {
+                    popup.dataset.positioned = 'true';
+                    requestAnimationFrame(() => {
+                        const pw = popup.offsetWidth;
+                        const ph = popup.offsetHeight;
+                        const W  = window.innerWidth;
+                        const H  = window.innerHeight;
+                        let left, top;
+                        if (link.dataset.popup === 'projects') {
+                            left = W * 0.03;                    /* top-left */
+                            top  = H * 0.08;
+                        } else if (link.dataset.popup === 'song') {
+                            left = W * 0.03;                    /* mid-left */
+                            top  = H * 0.58;
+                        } else if (link.dataset.popup === 'contact') {
+                            left = W - pw - W * 0.03;           /* bottom-right */
+                            top  = H - ph - H * 0.05;
+                        } else if (link.dataset.popup === 'blog') {
+                            left = W - pw - W * 0.03;           /* top-right */
+                            top  = H * 0.05;
+                        } else {
+                            left = W / 2 - pw / 2;
+                            top  = H / 2 - ph / 2;
+                        }
+                        popup.style.left = Math.max(0, left) + 'px';
+                        popup.style.top  = Math.max(0, top)  + 'px';
+                    });
+                }
             });
+        });
+
+        function clampPopup(popup) {
+            const pad = 20;
+            const maxLeft = window.innerWidth  - popup.offsetWidth  - pad;
+            const maxTop  = window.innerHeight - popup.offsetHeight - pad;
+            popup.style.left = Math.max(pad, Math.min(popup.offsetLeft, maxLeft)) + 'px';
+            popup.style.top  = Math.max(pad, Math.min(popup.offsetTop,  maxTop))  + 'px';
+        }
+
+        // open contact popup on load
+        const contactPopup = document.getElementById('popup-contact');
+        contactPopup.classList.add('open');
+        contactPopup.dataset.positioned = 'true';
+        requestAnimationFrame(() => {
+            const pw = contactPopup.offsetWidth;
+            const ph = contactPopup.offsetHeight;
+            contactPopup.style.left = Math.max(0, window.innerWidth  - pw - window.innerWidth  * 0.03) + 'px';
+            contactPopup.style.top  = Math.max(0, window.innerHeight - ph - window.innerHeight * 0.05) + 'px';
         });
 
         document.querySelectorAll('.popup-close').forEach(btn => {
@@ -927,6 +1025,9 @@
                 popup.classList.remove('open');
                 if (popup.id === 'popup-song' && favPlaying) {
                     stopFavSong();
+                }
+                if (popup.id === 'popup-blog' && newTagEntry) {
+                    newTagEntry.style.visibility = 'hidden';
                 }
             });
         });
