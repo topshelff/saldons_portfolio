@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>saldon's co-op work term reports</title>
+    <style>
+        @font-face {
+            font-family: 'NintendoDS';
+            src: url('assets/fonts/Nintendo-DS-BIOS.ttf');
+        }
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+        html, body {
+            width: 100%;
+            height: 100vh;
+            overflow: hidden;
+        }
+        #bg-canvas {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            z-index: -1;
+        }
+        body {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .notepad-wrap {
+            position: relative;
+            height: 100vh;   /* ← notepad height */
+            width: 1200px;   /* ← notepad width */
+        }
+        .notepad-wrap > img {
+            width: 100%;
+            height: 100%;
+            object-fit: fill;
+            display: block;
+            pointer-events: none;
+        }
+        .notepad-text {
+            position: absolute;
+            top: 13%;
+            bottom: 6%;
+            left: 5%;
+            right: 8%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .back-link {
+            position: fixed;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%) rotate(180deg);
+            font-family: 'NintendoDS', monospace;
+            font-size: 20px;
+            text-decoration: none;
+            z-index: 10;
+            writing-mode: vertical-rl;
+            text-orientation: mixed;
+        }
+        /* scale notepad down on smaller screens so blinkies don't overlap */
+        @media (max-width: 1700px) {
+            .notepad-wrap { zoom: 0.85; height: 117vh; }
+        }
+        @media (max-width: 1500px) {
+            .notepad-wrap { zoom: 0.75; height: 133vh; }
+        }
+        @media (max-width: 1300px) {
+            .notepad-wrap { zoom: 0.65; height: 154vh; }
+        }
+    </style>
+</head>
+<body>
+    <canvas id="bg-canvas"></canvas>
+
+    <a class="back-link" href="index.html" id="backLink">← back to main page!</a>
+
+    <!-- jazz audio — swap src for the actual file when ready -->
+    <audio id="jazz" loop src="assets/music/Night Lights.opus"></audio>
+
+    <!-- monkey dj — click to play/pause jazz -->
+    <div style="position:fixed;right:16px;top:16px;z-index:10;text-align:center;">
+        <img id="recordPlayer" src="assets/co-op/record_player.gif" alt="record player" style="width:100px;cursor:pointer;display:block;image-rendering:pixelated;">
+        <span style="font-family:'NintendoDS',monospace;font-size:16px;color:#111;text-shadow:none;">click on me!</span>
+    </div>
+    <span id="songCredit" style="font-family:'NintendoDS',monospace;font-size:15px;color:#111;text-shadow:none;display:none;position:fixed;bottom:16px;right:16px;white-space:nowrap;text-align:right;z-index:10;">♪ Night Lights<br>by Gerry Mulligan Sextet</span>
+
+    <!-- co-op term blinkies -->
+    <div style="position:fixed;left:16px;top:16px;display:flex;flex-direction:column;gap:0px;z-index:10;">
+        <div style="font-family:'NintendoDS',monospace;font-size:11px;font-weight:bold;color:#111;background:rgba(255,255,255,0.85);padding:5px 6px;width:220px;text-align:center;margin-bottom:8px;">Co-op Work Term Directory!</div>
+        <!-- credit: amy https://graphics-cafe.tumblr.com -->
+        <a href="s26_coop.html"><img src="assets/co-op/s26_coop_blinkie.gif" alt="s26 co-op work term" style="display:block;image-rendering:pixelated;width:220px;"></a>
+        <a href="f26_coop.html"><img src="assets/co-op/f26_coop_blinkie.gif" alt="f26 co-op work term" style="display:block;image-rendering:pixelated;width:220px;"></a>
+    </div>
+
+    <div class="notepad-wrap">
+        <img src="assets/notepad.png" alt="notepad">
+        <div class="notepad-text">
+            <img src="assets/gifs/under_construc_pikachu.gif" alt="under construction" style="width:300px;">
+        </div>
+    </div>
+
+    <script>
+        // monkey dj — click to toggle jazz
+        const jazz = document.getElementById('jazz');
+        jazz.volume = 0.1; /* ← jazz volume */
+        const songCredit = document.getElementById('songCredit');
+        const clickLabel = document.querySelector('#recordPlayer + span');
+        document.getElementById('recordPlayer').addEventListener('click', () => {
+            if (jazz.paused) {
+                jazz.play();
+                songCredit.style.display = 'block';
+                clickLabel.textContent = 'enjoy! c:';
+            } else {
+                jazz.pause();
+                songCredit.style.display = 'none';
+                clickLabel.textContent = 'click on me!';
+            }
+        });
+
+        // rgb cycle on back link
+        const backLink = document.getElementById('backLink');
+        let hue = 0;
+        setInterval(() => {
+            hue = (hue + 2) % 360;
+            backLink.style.color = `hsl(${hue}, 100%, 45%)`;
+        }, 30);
+
+        // tiled binary background
+        const canvas = document.getElementById('bg-canvas');
+        const ctx = canvas.getContext('2d');
+        const img = new Image();
+        img.src = 'assets/wtr_bg.jpg';
+        img.onload = () => { draw(); window.addEventListener('resize', draw); };
+        function draw() {
+            canvas.width  = window.innerWidth;
+            canvas.height = window.innerHeight;
+            const pattern = ctx.createPattern(img, 'repeat');
+            ctx.fillStyle = pattern;
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+        }
+    </script>
+</body>
+</html>

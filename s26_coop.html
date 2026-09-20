@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>saldon's co-op work term reports</title>
+    <style>
+        @font-face {
+            font-family: 'NintendoDS';
+            src: url('assets/fonts/Nintendo-DS-BIOS.ttf');
+        }
+        @font-face {
+            font-family: 'Notulen';
+            src: url('assets/fonts/Notulen.ttf');
+        }
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+        html, body {
+            width: 100%;
+            height: 100vh;
+            overflow: hidden;
+        }
+        #bg-canvas {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            z-index: -1;
+        }
+        body {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .notepad-wrap {
+            position: relative;
+            height: 100vh;  /* ← notepad height */
+            width: 1200px;   /* ← notepad width */
+        }
+        .notepad-wrap > img {
+            width: 100%;
+            height: 100%;
+            object-fit: fill; /* stretches to match both dimensions */
+            display: block;
+            pointer-events: none;
+        }
+        .notepad-text {
+            position: absolute;
+            top: 13%;    /* ← distance from top of notepad (below the spiral) */
+            bottom: 6%;  /* ← distance from bottom */
+            left: 5%;   /* ← left margin */
+            right: 8%;   /* ← right margin */
+            overflow-y: auto;
+            font-family: 'Notulen', monospace;
+            font-size: 25px;
+            line-height: 2.05; /* ← tweak to align text to the blue lines */
+            color: #111;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+        .notepad-text::-webkit-scrollbar { width: 4px; }
+        .notepad-text::-webkit-scrollbar-thumb { background: #aaa; border-radius: 2px; }
+        .photo-wrap {
+            float: right;
+            position: relative;
+            width: 280px;       /* ← must match .inline-img width */
+            margin-left: 20px;
+            margin-bottom: 10px;
+            margin-top: 18px;
+        }
+        .inline-img {
+            display: block;
+            width: 280px;       /* ← image width */
+            border: 3px solid #333;
+            position: relative;
+            z-index: 1;
+        }
+        .tape {
+            position: absolute;
+            top: -30px;         /* ← how far above the photo the tape sits */
+            left: 50%;
+            transform: translateX(-50%) rotate(-8deg); /* ← rotation angle */
+            width: 65px;        /* ← tape size */
+            z-index: 2;
+        }
+        .photo-center {
+            position: relative;
+            display: block;
+            margin: 18px auto 10px; /* ← top margin accounts for tape */
+            width: 620px;           /* ← image width */
+        }
+        .photo-center .inline-img {
+            width: 100%;
+        }
+        .logo-row {
+            display: flex;
+            gap: 20px;          /* ← gap between the two logos */
+            align-items: center;
+            justify-content: center;
+            margin: 10px 0;
+        }
+        .logo-row img {
+            width: 180px;       /* ← logo size */
+            object-fit: contain;
+            transition: transform 0.1s;
+        }
+        .logo-row img:last-child {
+            width: 100px;       /* ← jill logo size */
+        }
+        .logo-row img:hover {
+            animation: logo-wobble 0.5s ease infinite;
+        }
+        @keyframes logo-wobble {
+            0%   { transform: rotate(0deg); }
+            25%  { transform: rotate(8deg); }
+            75%  { transform: rotate(-8deg); }
+            100% { transform: rotate(0deg); }
+        }
+        .photo-caption {
+            font-size: 14px;    /* ← caption font size */
+            color: #444;
+            text-align: center;
+            margin-top: 6px;
+            line-height: 1.4;
+            text-shadow: none;
+        }
+        .pikachu {
+            position: fixed;
+            top: 12px;  /* ← distance from top */
+            left: 12px; /* ← distance from left */
+            z-index: 10;
+        }
+        .back-link {
+            position: fixed;
+            left: 12px;       /* ← distance from left edge */
+            top: 50%;
+            transform: translateY(-50%);
+            font-family: 'NintendoDS', monospace;
+            font-size: 20px;
+            text-decoration: none;
+            z-index: 10;
+            writing-mode: vertical-rl;
+            text-orientation: mixed;
+            transform: translateY(-50%) rotate(180deg);
+        }
+        /* scale notepad down on smaller screens so blinkies don't overlap */
+        @media (max-width: 1700px) {
+            .notepad-wrap { zoom: 0.85; height: 117vh; }
+        }
+        @media (max-width: 1500px) {
+            .notepad-wrap { zoom: 0.75; height: 133vh; }
+        }
+        @media (max-width: 1300px) {
+            .notepad-wrap { zoom: 0.65; height: 154vh; }
+        }
+    </style>
+</head>
+<body>
+    <canvas id="bg-canvas"></canvas>
+
+    <a class="back-link" href="index.html" id="backLink">← back to main page!</a>
+
+    <!-- jazz audio — swap src for the actual file when ready -->
+    <audio id="jazz" loop src="assets/music/Night Lights.opus"></audio>
+
+    <!-- record player — click to play/pause jazz -->
+    <div style="position:fixed;right:16px;top:16px;z-index:10;text-align:center;">
+        <img id="recordPlayer" src="assets/co-op/record_player.gif" alt="record player" style="width:100px;cursor:pointer;display:block;image-rendering:pixelated;">
+        <span style="font-family:'NintendoDS',monospace;font-size:16px;color:#111;text-shadow:none;">click on me!</span>
+    </div>
+    <span id="songCredit" style="font-family:'NintendoDS',monospace;font-size:15px;color:#111;text-shadow:none;display:none;position:fixed;bottom:16px;right:16px;white-space:nowrap;text-align:right;z-index:10;">♪ Night Lights<br>by Gerry Mulligan Sextet</span>
+
+    <!-- co-op term blinkies — add future terms below -->
+    <div style="position:fixed;left:16px;top:16px;display:flex;flex-direction:column;gap:0px;z-index:10;">
+        <div style="font-family:'NintendoDS',monospace;font-size:17px;font-weight:bold;color:#111;background:rgba(255,255,255,0.85);padding:5px 6px;width:220px;text-align:center;margin-bottom:8px;">Co-op Work Term Directory!</div>
+        <!-- credit: amy https://graphics-cafe.tumblr.com -->
+        <a href="s26_coop.html"><img src="assets/co-op/s26_coop_blinkie.gif" alt="s26 co-op work term" style="display:block;image-rendering:pixelated;width:220px;"></a>
+        <!-- credit: amy https://graphics-cafe.tumblr.com -->
+        <a href="f26_coop.html"><img src="assets/co-op/f26_coop_blinkie.gif" alt="f26 co-op work term" style="display:block;image-rendering:pixelated;width:220px;"></a>
+    </div>
+
+    <div class="notepad-wrap">
+        <img src="assets/notepad.png" alt="notepad">
+        <div class="notepad-text">
+            <p style="font-size: 50px; margin-bottom: 0.5em;">Saldon's Summer 2026 Work Term Report! <span style="font-size:0.5em;">⸜(*ˊᗜˋ*)⸝</span></p> 
+            <img src="assets/co-op/Fish divider.jpg" alt="" style="width:50%;display:block;mix-blend-mode:multiply;margin-top:-1em;margin-bottom:2em;pointer-events:none;">
+            <p><div class="photo-wrap"><img class="inline-img" src="assets/co-op/me_working.jpg" alt="me working"><img class="tape" src="assets/wtr_bg2.gif" alt=""><p class="photo-caption">saldon at her desk attending a meeting while catching up on her daily intake of fruits!</p></div>From June to August 2026, I worked as a Junior Developer at Jack & Jill Health, a Canadian telehealth company built around two condition-specific offerings: Jack for men's health and Jill for women's health. This report covers the engineering work behind turning a passive patient questionnaire into a system that scores real clinical instruments and returns an interpreted health picture back to the patient, along with the technical and clinical-data challenges that came with building it. What I want a reader to take away is that building software for healthcare means the code is only half the problem, the other half is making sure what the code produces is clinically accurate, safe, and something a patient can actually trust.</p>
+            <br>
+            <div class="logo-row">
+                <a href="https://jack.health" target="_blank" style="display:contents;"><img src="assets/co-op/jack-health.png" alt="Jack Health" style="width:180px;"></a>
+                <a href="https://jill.health" target="_blank" style="display:contents;"><img src="assets/co-op/jill-health.png" alt="Jill Health" style="width:100px;"></a>
+            </div>
+            <br>
+            <p>Jack & Jill Health is a Canadian digital health company operating in the telehealth space, structured around two focused offerings: <a href="https://jack.health" target="_blank" style="color:#2563eb;">Jack for men's health</a> (conditions like hair loss and ED) and <a href="https://jill.health" target="_blank" style="color:#db2777;">Jill for women's health</a> (conditions like menopause and perimenopause). The company focuses on the use of software engineering and clinical medicine, building the systems that let a small in-house medical team deliver personalized, condition-specific care to a much larger patient base than a traditional clinic could reach on its own. This split-brand structure is also what made the BioAge questionnaire work land the way it did, since the scoring engine had to branch cleanly by gender to serve both sides of the platform with clinically appropriate instruments.</p>
+            <br>
+            <p>Going into this term I set three main goals: getting better at managing multiple concurrent tasks without letting deadlines slip, strengthening how I collaborate on shared codebases, and pushing my technical skills (AI-driven automation, MongoDB, product analytics) past what coursework alone had covered.</p>
+            <br>
+            <p><div style="float:left;position:relative;width:340px;margin-right:20px;margin-bottom:10px;margin-top:18px;"><img style="display:block;width:340px;border:3px solid #333;position:relative;z-index:1;" src="assets/co-op/work_clickup.jpg" alt="clickup"><img class="tape" src="assets/co-op/green_tape.png" alt="" style="width:100px; top:-24px;"><p class="photo-caption">My top monitor has ClickUp on it with different tasks set as Released, Code Review, Work in Progress, etc.<br>(I'm also in a meeting...)</p></div>On time management, keeping a disciplined ticket tracking habit in ClickUp, and breaking bigger assignments into subtasks with target dates turned out to matter more than I expected once I was juggling bug fixes and a multi-week feature at the same time. By the end of the term I could give an accurate read on my own workload without having to think hard about it, which wasn't true in June.</p>
+            <br>
+            <p>Teamwork sharpened mostly through unplanned moments rather than the ones I'd wrote in my action plan. Coordinating a four day deadline release between the marketing team and technical leads taught me more about proactive communication than any of the code reviews did, mainly because there was no time to fix a misunderstanding after the fact.</p>
+            <br>
+            <p>Technically, this is where the term exceeded what I'd planned for. I got comfortable working with AI-assisted automation workflows, learning how to use it effectively without sacrificing product quality, at one point building a flash sale page from scratch that handled multiple product IDs, pulled live data from our CRM, and matched exactly what my team leads expected. With PostHog, I combined it with the same AI-assisted workflow to surface analytics on our patient app, work that meant collaborating not just with the tech team but with marketing too, to figure out what was working, what wasn't, and what needed to be built next. MongoDB ran through nearly everything I touched, from CRM to EMR data fetches, handling patient information carefully and appropriately, and updating EMR and CRM functionality to improve the experience for the medical, marketing, and tech teams alike.</p>
+            <br>
+            <div class="photo-center">
+                <img class="inline-img" src="assets/co-op/my_setup.jpg" alt="my setup" style="border: none;margin-bottom: 2em;">
+                <img class="tape" style="top: -20px; left: -20px; transform: rotate(-45deg);" src="assets/wtr_bg2.gif" alt="">
+                <img class="tape" style="top: -20px; left: auto; right: -20px; transform: rotate(45deg);" src="assets/wtr_bg2.gif" alt="">
+                <img src="assets/co-op/cursor_monitor.png" alt="" style="position:absolute;width:250px;top:120px;left:-250px;mix-blend-mode:multiply;pointer-events:none;z-index:2;">
+                <img src="assets/co-op/github_monitor.png" alt="" style="position:absolute;width:230px;top:18px;left:600px;mix-blend-mode:multiply;pointer-events:none;z-index:2;">
+                <img src="assets/co-op/slack_monitor.png" alt="" style="position:absolute;width:260px;top:285px;left:545px;mix-blend-mode:multiply;pointer-events:none;z-index:2;"> <!-- ← adjust top to aim at laptop screen -->
+            </div>
+            <p>My role centered on two projects that, together, capture most of what the term was about, and both demanded real depth in the codebase itself, not just surface-level changes.</p>
+            <br>
+            <p>The larger of the two was rebuilding the patient health questionnaire system from a homegrown scoring scheme into one based on nine validated clinical instruments (covering sleep, stress, mood, cognition, and several other health domains). The task arrived looking like a routine content update; it turned into a full-stack rebuild touching the questionnaire flow, a scoring engine made from scratch, and a new results page that, for the first time, actually showed patients an interpretation of their own answers. Configuring the scoring logic itself was substantial engineering work: translating validated clinical formulas into code that handled edge cases correctly, branched appropriately by instrument, and integrated cleanly with the rest of the codebase.</p>
+            <br>
+            <p>Alongside the coding itself, the harder problem was that the written scoring specification I was handed conflicted with the live product in several places. For example, question wording that no longer existed, answer options that had changed, or item numbers that didn't line up. Finding and resolving those mismatches before writing a line of scoring logic mattered as much as the logic itself because a scoring engine built against the wrong spec would have quietly returned wrong results to real patients. Since I couldn't test the full pipeline end-to-end against real patient accounts, I built confidence a different way. This was done by cross-checking every instrument's scoring boundaries against the published clinical guides, writing a full test suite to cover edge cases, and manually verifying results by hand against real staging data before calling it done.</p>
+            <br>
+            <div style="display:flex;gap:12px;justify-content:center;margin-bottom:0.5em;">
+                <div style="width:48%;">
+                    <img src="assets/co-op/demo_flow_screenshot.png" alt="demo flow" style="width:100%;border:3px solid #333;display:block;">
+                    <p class="photo-caption">This is one of the few pages i've made on the patient app that real patients see! It allows users to know themselves better through clinical flows.</p>
+                </div>
+                <div style="width:48%;">
+                    <img src="assets/co-op/demo_screenshot.png" alt="demo screenshot" style="width:100%;border:3px solid #333;display:block;">
+                    <p class="photo-caption">This is another page I got to build! this is the patient facing results page that was built with my scoring scheme reflected through a simple UI screen for patients to see.</p>
+                </div>
+            </div>
+            <p class="photo-caption" style="margin-top:8px;font-size:18px;">(These screenshots are from a demo video I presented to the CEO and all the company leads, and I'd be lying if I said I wasn't nervous)</p>
+            <br>
+            <p>By the end of the term, the questionnaire scoring engine was fully built, tested, and verified by hand against real data. More importantly, this system is already the foundation of other projects at Jack & Jill Health that are actively being built, specifically the work that will carry the platform further into a future of AI-powered, deeply personalized patient care. What started as a questionnaire update turned into infrastructure the rest of the product now depends on, and that's the kind of impact I hoped this term would have.</p>
+            <br>
+            <p>And so, if I had to summarize the term in one line, it would be that this co-op work term wasn't just a learning experience, it was a chance to build something that actually matters to Jack & Jill Health going forward. Coming in, I expected to spend the term picking up new skills and closing out tickets. I'm leaving having shipped a system the rest of the team is already building on top of, that real users are already interacting with, and I feel like that's a different kind of awesome accomplishment than just growing as a developer.</p>
+            <br>
+            <p>I'd like to thank the whole team at Jack & Jill Health for their guidance throughout the term. My supervisor, Soojin, was the first person I met on the tech team, who walked me through the codebases, got me more comfortable with GitHub, and was endlessly patient with my early mistakes. Her willingness to support me at any point during the term made a real difference in how quickly I was able to contribute, and I'm genuinely grateful to her! Thanks as well to Katie, my co-op coordinator, for her support throughout the co-op process and for letting me know this term could count as a summer co-op too. I'm looking forward to continue my growth as a Junior Developer at Jack & Jill Health for my next co-op term (F26). :]</p>
+            <br>
+            <div style="display:flex;align-items:flex-start;gap:30px;">
+                <div>
+                    <p>Cheers!</p>
+                    <p>- saldon :D</p>
+                </div>
+                <div style="position:relative;width:420px;flex-shrink:0;margin-left:auto;margin-right:auto;">
+                    <img src="assets/co-op/green_tape.png" alt="" style="position:absolute;width:580px;top:38%;left:50%;transform:translate(-50%,-50%) rotate(-4deg);z-index:0;">
+                    <img src="assets/co-op/throwback_interview.png" alt="throwback interview" style="width:100%;display:block;border:3px solid #333;position:relative;z-index:1;">
+                    <p class="photo-caption" style="position:relative;z-index:1;">this is a screenshot from my interview video for this co-op, a little throw-back to end it off!</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // monkey dj — click to toggle jazz
+        const jazz = document.getElementById('jazz');
+        jazz.volume = 0.1; /* ← jazz volume */
+        const songCredit = document.getElementById('songCredit');
+        const clickLabel = document.querySelector('#recordPlayer + span');
+        document.getElementById('recordPlayer').addEventListener('click', () => {
+            if (jazz.paused) {
+                jazz.play();
+                songCredit.style.display = 'block';
+                clickLabel.textContent = 'enjoy! c:';
+            } else {
+                jazz.pause();
+                songCredit.style.display = 'none';
+                clickLabel.textContent = 'click on me!';
+            }
+        });
+
+        // rgb cycle on back link
+        const backLink = document.getElementById('backLink');
+        let hue = 0;
+        setInterval(() => {
+            hue = (hue + 2) % 360;
+            backLink.style.color = `hsl(${hue}, 100%, 45%)`;
+        }, 30);
+
+        const canvas = document.getElementById('bg-canvas');
+        const ctx = canvas.getContext('2d');
+
+        const img = new Image();
+        img.src = 'assets/wtr_bg.jpg';
+        img.onload = () => {
+            draw();
+            window.addEventListener('resize', draw);
+        };
+
+        function draw() {
+            canvas.width  = window.innerWidth;
+            canvas.height = window.innerHeight;
+            const pattern = ctx.createPattern(img, 'repeat');
+            ctx.fillStyle = pattern;
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+        }
+    </script>
+</body>
+</html>
